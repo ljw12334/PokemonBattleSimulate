@@ -33,7 +33,7 @@ public class Pokemon {
 
 
     // 배운 기술
-    public Move moves[];
+    public MoveList moves[];
     // 지닌 도구
     public Item item = null;
 

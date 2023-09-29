@@ -15,7 +15,9 @@ public class CynthiaGarchomp extends Pokemon {
         this.ivs = new int[]{31, 31, 31, 0, 31, 31};
         this.evs = new int[]{52, 252, 0, 0, 0, 204};
 
-        this.moves = new Move[]{};
+        this.moves = new MoveList[]{MoveList.DRAGON_CLAW, MoveList.EARTHQUAKE,
+                                    MoveList.SWORDS_DANCE, MoveList.POISON_JAB};
+
         this.item = new SitrusBerry();
 
         initPokemon();

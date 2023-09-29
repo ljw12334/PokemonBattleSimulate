@@ -1,6 +1,10 @@
 package pokemon;
 
 public enum Type {
+    NONE("", // 빈 타입
+            new String[]{},
+            new String[]{},
+            new String[]{}),
     NORMAL("노말",
             new String[]{},
             new String[]{"바위", "강철"},
@@ -72,10 +76,6 @@ public enum Type {
     FAIRY("페어리",
             new String[]{"격투", "드래곤", "악"},
             new String[]{"불꽃", "독", "강철"},
-            new String[]{}),
-    NONE("", // 빈 타입
-            new String[]{},
-            new String[]{},
             new String[]{});
 
 
