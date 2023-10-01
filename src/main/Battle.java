@@ -1,6 +1,7 @@
 package main;
 
 import pokemon.Ability;
+import pokemon.MoveList;
 import pokemon.Pokemon;
 import pokemon.Type;
 import trainer.Trainer;
@@ -79,7 +80,7 @@ public class Battle {
         enemyRank = new byte[]{0, 0, 0, 0, 0};
     }
 
-    public float isCritialHit() {
+    public float isCriticalHit() {
         if (Math.random() * 24 + 1 >= 24) {
             return 1.5f;
         } else {
@@ -124,5 +125,43 @@ public class Battle {
             }
         }
         return false;
+    }
+
+    public int damageCaculate(Pokemon attackPokemon, Pokemon targetPokemon, MoveList sMove, float isCritical) {
+        // (데미지 = (((((((레벨 × 2 ÷ 5) + 2) × 위력 × (특수)공격 ÷ 50) ÷ (특수)방어) × Mod1) + 2) × [[급소]] ×
+        //           Mod2 ×  랜덤수 ÷ 100) × 자속보정 × 타입상성1 × 타입상성2 × Mod3)
+        int damage;
+
+        int level = attackPokemon.getLevel();
+        int power = sMove.getPower();
+        int attack;
+        int defense;
+        float stab = isSameType(sMove.getType(), attackPokemon);
+        float type1 = typeCaculate(sMove.getType(), targetPokemon.getType1());
+        float type2 = typeCaculate(sMove.getType(), targetPokemon.getType2());
+        float mod1 = mod1();
+        float mod2 = mod2();
+        float mod3 = mod3();
+        float critical = isCritical;
+        int randomInt = (int) ((Math.random() * 38 + 217) * 100) / 255;
+
+        if (sMove.getKind() == MoveList.Kind.PHYSICAL) {
+            attack = attackPokemon.getBattleStats()[Stat.ATTACK.getID()];
+            defense = targetPokemon.getBattleStats()[Stat.DEFENSE.getID()];
+
+            damage = (int) ((int) (((int) ((((level * 2 / 5) + 2) * power * attack / 50) / defense * mod1) + 2) * critical * mod2 * randomInt / 100) * stab * type1 * type2 * mod3);
+
+        } else if (sMove.getKind() == MoveList.Kind.SPECIAL) {
+            attack = attackPokemon.getBattleStats()[Stat.SP_ATTACK.getID()];
+            defense = targetPokemon.getBattleStats()[Stat.SP_DEFENSE.getID()];
+
+            damage = (int) ((int) (((int) ((((level * 2 / 5) + 2) * power * attack / 50) / defense * mod1) + 2) * critical * mod2 * randomInt / 100) * stab * type1 * type2 * mod3);
+
+        } else {
+            damage = 0;
+        }
+
+        if (type1 * type2 != 0 && damage <= 0) damage = 1;
+        return damage;
     }
 }

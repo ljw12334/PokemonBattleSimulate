@@ -52,6 +52,7 @@ public class Pokemon {
 
     // 배운 기술
     private MoveList[] moves = new MoveList[4];
+    private int[] pp;
     // 지닌 도구
     private Item item = null;
 
@@ -63,7 +64,13 @@ public class Pokemon {
     private boolean isStuned = false;
 
 
+    public int[] getPp() {
+        return pp;
+    }
 
+    public void setPp(int pp, int moveNum) {
+        this.pp[moveNum] = pp;
+    }
 
     public PokemonList getPokemonKind() {
         return pokemonKind;
@@ -282,5 +289,44 @@ public class Pokemon {
                 caculateABCDS(Stat.SP_DEFENSE, this.level, this.baseStats, this.ivs, this.evs, this.nature),
                 caculateABCDS(Stat.SPEED, this.level, this.baseStats, this.ivs, this.evs, this.nature)
         };
+        int[] pp;
+        // 기술 개수
+        if (this.getMoves().length >= 4) {
+            pp = new int[]{ this.moves[0].getPp(), this.moves[1].getPp(),
+                            this.moves[2].getPp(), this.moves[3].getPp() };
+        } else if (this.getMoves().length >= 3) {
+            pp = new int[]{ this.moves[0].getPp(), this.moves[1].getPp(),
+                            this.moves[2].getPp() };
+        } else if (this.getMoves().length >= 2) {
+            pp = new int[]{ this.moves[0].getPp(), this.moves[1].getPp() };
+        } else if (this.getMoves().length >= 1) {
+            pp = new int[]{ this.moves[0].getPp() };
+        } else {
+            System.out.println("기술 없음");
+            return;
+        }
+        this.pp = pp;
+    }
+    public boolean isNoPp() {
+        if (this.moves.length == 4) {
+            if (this.pp[0] == 0 && this.pp[1] == 0 && this.pp[2] == 0 && this.pp[3] == 0) {
+                return true;
+            }
+        } else if (this.moves.length == 3) {
+            if (this.pp[0] == 0 && this.pp[1] == 0 && this.pp[2] == 0) {
+                return true;
+            }
+        } else if (this.moves.length == 2) {
+            if (this.pp[0] == 0 && this.pp[1] == 0) {
+                return true;
+            }
+        } else if (this.moves.length == 1) {
+            if (this.pp[0] == 0) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
     }
 }

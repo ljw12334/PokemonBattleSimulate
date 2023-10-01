@@ -2,8 +2,10 @@ package trainer;
 
 import pokemon.Pokemon;
 import pokemon.sample.MissingNo;
+import trainer.ai.BattleAi;
 
 public class Trainer {
+    private BattleAi ai;
     private String trainerClass;
     private String trainerName;
     private Pokemon[] pokemons = new Pokemon[6];
@@ -11,10 +13,24 @@ public class Trainer {
     private int penaltyMoney;
 
 
-    public String getTrainerClass() { return trainerClass; }
-    public void setTrainerClass(String trainerClass) { this.trainerClass = trainerClass; }
-    public String getTrainerName() { return trainerName; }
-    public void setTrainerName(String trainerName) { this.trainerName = trainerName; }
+    public BattleAi getAi() {
+        return ai;
+    }
+    public void setAi(BattleAi ai) {
+        this.ai = ai;
+    }
+    public String getTrainerClass() {
+        return trainerClass;
+    }
+    public void setTrainerClass(String trainerClass) {
+        this.trainerClass = trainerClass;
+    }
+    public String getTrainerName() {
+        return trainerName;
+    }
+    public void setTrainerName(String trainerName) {
+        this.trainerName = trainerName;
+    }
 
     public Pokemon[] getPokemons() {
         return pokemons;
