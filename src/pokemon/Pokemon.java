@@ -1,7 +1,25 @@
 package pokemon;
 
 public class Pokemon {
-    public enum Gender {MALE, FEMALE, NONE};
+    public enum Gender {
+        MALE("♂"), FEMALE("♀"), NONE(" ");
+
+        private final String SYMBOL;
+        Gender(String symbol) {
+            SYMBOL = symbol;
+        }
+        public String getSYMBOL() { return SYMBOL; }
+    }
+
+    public enum Stat {
+        HP((byte) 0), ATTACK((byte) 1), DEFENSE((byte) 2), SP_ATTACK((byte) 3), SP_DEFENSE((byte) 4), SPEED((byte) 5);
+
+        private final byte ID;
+        Stat(byte id) {
+            ID = id;
+        }
+        public byte getID() { return ID; }
+    }
 
     private PokemonList pokemonKind;
 
@@ -18,13 +36,13 @@ public class Pokemon {
     // 성격
     private Nature nature;
     // 개체치 | individual values. 0 ~ 31 의 값을 지님
-    private int[] ivs;
+    private int[] ivs = new int[6];
     // 노력치 | effort values. 0 ~ 252 의 값을 지님
-    private int[] evs;
+    private int[] evs = new int[6];
     // 능력치 | 종족값, 개체값, 노력치를 바탕으로 계산된 실제 능력치
-    private int[] stats;
+    private int[] stats = new int[6];
     // 실능치 | 능력치에 특성이나 기술, 랭크 업다운 등으로 발생한 능력치의 변화가 적용된 각종 배틀 계산에 사용되는 실제 수치
-    private int battleStats[];
+    private int[] battleStats = new int[6];
 
 
     // 랭크 업다운 / -6 ~ 6 사이의 값, default : 0
@@ -83,8 +101,13 @@ public class Pokemon {
         return baseStats;
     }
 
-    public void setBaseStats(int[] baseStats) {
-        this.baseStats = baseStats;
+    public void setBaseStats(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+        this.baseStats[Stat.HP.getID()] = hp;
+        this.baseStats[Stat.ATTACK.getID()] = attack;
+        this.baseStats[Stat.DEFENSE.getID()] = defense;
+        this.baseStats[Stat.SP_ATTACK.getID()] = spAttack;
+        this.baseStats[Stat.SP_DEFENSE.getID()] = spDefense;
+        this.baseStats[Stat.SPEED.getID()] = speed;
     }
 
     public Ability getAbility() {
@@ -123,16 +146,26 @@ public class Pokemon {
         return ivs;
     }
 
-    public void setIvs(int[] ivs) {
-        this.ivs = ivs;
+    public void setIvs(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+        this.ivs[Stat.HP.getID()] = hp;
+        this.ivs[Stat.ATTACK.getID()] = attack;
+        this.ivs[Stat.DEFENSE.getID()] = defense;
+        this.ivs[Stat.SP_ATTACK.getID()] = spAttack;
+        this.ivs[Stat.SP_DEFENSE.getID()] = spDefense;
+        this.ivs[Stat.SPEED.getID()] = speed;
     }
 
     public int[] getEvs() {
         return evs;
     }
 
-    public void setEvs(int[] evs) {
-        this.evs = evs;
+    public void setEvs(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
+        this.evs[Stat.ATTACK.getID()] = attack;
+        this.evs[Stat.HP.getID()] = hp;
+        this.evs[Stat.DEFENSE.getID()] = defense;
+        this.evs[Stat.SP_ATTACK.getID()] = spAttack;
+        this.evs[Stat.SP_DEFENSE.getID()] = spDefense;
+        this.evs[Stat.SPEED.getID()] = speed;
     }
 
     public int[] getStats() {
@@ -147,10 +180,16 @@ public class Pokemon {
         return battleStats;
     }
 
-    public void setBattleStats(int[] battleStats) {
-        this.battleStats = battleStats;
+    public void setCurrentHp(int hp) {
+        this.battleStats[Stat.HP.getID()] = hp;
     }
-
+    public void setBattleStats(int attack, int defense, int spAttack, int spDefense, int speed) {
+        this.battleStats[Stat.ATTACK.getID()] = attack;
+        this.battleStats[Stat.DEFENSE.getID()] = defense;
+        this.battleStats[Stat.SP_ATTACK.getID()] = spAttack;
+        this.battleStats[Stat.SP_DEFENSE.getID()] = spDefense;
+        this.battleStats[Stat.SPEED.getID()] = speed;
+    }
     public MoveList[] getMoves() {
         return moves;
     }
@@ -209,9 +248,9 @@ public class Pokemon {
         return stat;
     }
     // 공, 방, 특공, 특방, 스피드
-    public static int caculateABCDS(int kind, int level, int[] bs, int[] iv, int[] ev, Nature nature) {
+    public static int caculateABCDS(Stat kind, int level, int[] bs, int[] iv, int[] ev, Nature nature) {
         int stat;
-        stat = (int) (((bs[kind] * 2) + iv[kind] + (ev[kind] / 4)) * (level / 100.0f)) + 5;
+        stat = (int) (((bs[kind.getID()] * 2) + iv[kind.getID()] + (ev[kind.getID()] / 4)) * (level / 100.0f)) + 5;
 
         // 무보정 성격일 경우 그대로 return
         if (nature.getUpStat() == nature.getDownStat()) {
@@ -219,9 +258,9 @@ public class Pokemon {
         }
 
         // 성격에 따른 보정치 계산 | 상승치 : 1.1배, 하락치 : 0.9배
-        if (kind == nature.getUpStat()) {
+        if (kind.getID() == nature.getUpStat()) {
             stat = (int) (stat * 1.1f);
-        } else if (kind == nature.getDownStat()) {
+        } else if (kind.getID() == nature.getDownStat()) {
             stat = (int) (stat * 0.9f);
         }
 
@@ -237,11 +276,11 @@ public class Pokemon {
         this.baseStats = pokemonKind.getBaseStats();
         this.stats = new int[]{
                 caculateH(this.level, this.baseStats, this.ivs, this.evs),
-                caculateABCDS(1, this.level, this.baseStats, this.ivs, this.evs, this.nature),
-                caculateABCDS(2, this.level, this.baseStats, this.ivs, this.evs, this.nature),
-                caculateABCDS(3, this.level, this.baseStats, this.ivs, this.evs, this.nature),
-                caculateABCDS(4, this.level, this.baseStats, this.ivs, this.evs, this.nature),
-                caculateABCDS(5, this.level, this.baseStats, this.ivs, this.evs, this.nature)
+                caculateABCDS(Stat.ATTACK, this.level, this.baseStats, this.ivs, this.evs, this.nature),
+                caculateABCDS(Stat.DEFENSE, this.level, this.baseStats, this.ivs, this.evs, this.nature),
+                caculateABCDS(Stat.SP_ATTACK, this.level, this.baseStats, this.ivs, this.evs, this.nature),
+                caculateABCDS(Stat.SP_DEFENSE, this.level, this.baseStats, this.ivs, this.evs, this.nature),
+                caculateABCDS(Stat.SPEED, this.level, this.baseStats, this.ivs, this.evs, this.nature)
         };
     }
 }

@@ -10,8 +10,8 @@ public class CynthiaSpiritomb extends Pokemon {
         this.setLevel(74);
         this.setGender(Gender.FEMALE);
         this.setNature(Nature.QUIET);
-        this.setIvs(new int[]{31, 31, 31, 31, 31, 31});
-        this.setEvs(new int[]{252, 0, 0, 252, 0, 6});
+        this.setIvs(31, 31, 31, 31, 31, 31);
+        this.setEvs(252, 0, 0, 252, 0, 6);
 
         this.setMoves(new MoveList[]{MoveList.SHADOW_BALL, MoveList.DARK_PULSE,
                                      MoveList.WILL_O_WISP, MoveList.SUCKER_PUNCH});

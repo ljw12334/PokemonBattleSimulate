@@ -10,8 +10,8 @@ public class CynthiaTogekiss extends Pokemon {
         this.setLevel(76);
         this.setGender(Gender.MALE);
         this.setNature(Nature.TIMID);
-        this.setIvs(new int[]{31, 0, 31, 31, 31, 31});
-        this.setEvs(new int[]{52, 0, 0, 252, 0, 204});
+        this.setIvs(31, 0, 31, 31, 31, 31);
+        this.setEvs(52, 0, 0, 252, 0, 204);
 
         this.setMoves(new MoveList[]{MoveList.AIR_SLASH, MoveList.DAZZLING_GLEAM,
                                      MoveList.AURA_SPHERE, MoveList.THUNDER_WAVE});

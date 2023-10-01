@@ -25,8 +25,15 @@ public class Trainer {
             this.pokemons[0] = new MissingNo();
         }
 
-        for (int i = 0; i < 6; i++) {
-            this.pokemons[i] = pokemons[i];
+        if (pokemons.length < 6) {
+            for (int i = 0; i < pokemons.length; i++) {
+                this.pokemons[i] = pokemons[i];
+            }
+        } else {
+            for (int i = 0; i < 6; i++) {
+                this.pokemons[i] = pokemons[i];
+            }
         }
+
     }
 }

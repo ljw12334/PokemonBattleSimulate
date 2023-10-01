@@ -10,8 +10,8 @@ public class CynthiaRoserade extends Pokemon {
         this.setLevel(74);
         this.setGender(Gender.FEMALE);
         this.setNature(Nature.TIMID);
-        this.setIvs(new int[]{31, 0, 31, 31, 31, 31});
-        this.setEvs(new int[]{52, 0, 0, 252, 0, 204});
+        this.setIvs(31, 0, 31, 31, 31, 31);
+        this.setEvs(52, 0, 0, 252, 0, 204);
 
         this.setMoves(new MoveList[]{MoveList.DAZZLING_GLEAM, MoveList.SHADOW_BALL,
                                      MoveList.SLUDGE_BOMB, MoveList.ENERGY_BALL});

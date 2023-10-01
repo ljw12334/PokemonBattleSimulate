@@ -5,7 +5,7 @@ import pokemon.sample.*;
 
 public class Player extends Trainer {
     public Player() {
-        this.setTrainerName("빛나");
+        this.setTrainerName("난천");
         this.setPokemons(new Pokemon[]{
                 new CynthiaSpiritomb(), new CynthiaRoserade(), new CynthiaTogekiss(),
                 new CynthiaLucario(), new CynthiaMilotic(), new CynthiaGarchomp()
