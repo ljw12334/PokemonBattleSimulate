@@ -88,4 +88,20 @@ public enum Type {
         NOT_VERY_EFFECTIVE = notVeryEffective;
         NO_EFFECT = noEffect;
     }
+
+    public String getNAME() {
+        return NAME;
+    }
+
+    public String[] getSUPER_EFFECTIVE() {
+        return SUPER_EFFECTIVE;
+    }
+
+    public String[] getNOT_VERY_EFFECTIVE() {
+        return NOT_VERY_EFFECTIVE;
+    }
+
+    public String[] getNO_EFFECT() {
+        return NO_EFFECT;
+    }
 }

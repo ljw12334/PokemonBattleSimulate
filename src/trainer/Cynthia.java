@@ -1,10 +1,15 @@
 package trainer;
 
-import pokemon.sample.CynthiaGarchomp;
+import pokemon.Pokemon;
+import pokemon.sample.*;
 
 public class Cynthia extends Trainer {
     public Cynthia() {
-        this.p6 = new CynthiaGarchomp();
+        setTrainerName("난천");
 
+        this.setPokemons(new Pokemon[]{
+                new CynthiaSpiritomb(), new CynthiaRoserade(), new CynthiaTogekiss(),
+                new CynthiaLucario(), new CynthiaMilotic(), new CynthiaGarchomp()
+        });
     }
 }

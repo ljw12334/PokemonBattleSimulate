@@ -5,20 +5,19 @@ import pokemon.items.SitrusBerry;
 
 public class CynthiaGarchomp extends Pokemon {
     public CynthiaGarchomp() {
-        this.pokemonName = PokemonList.GARCHOMP; // 한카리아스
+        this.setPokemonKind(PokemonList.GARCHOMP); // 한카리아스
+        this.setAbility(Ability.ROUGH_SKIN); // 까칠한피부
 
-        this.ability = Ability.ROUGH_SKIN; // 까칠한피부
+        this.setLevel(78);
+        this.setGender(Gender.FEMALE);
+        this.setNature(Nature.JOLLY);
+        this.setIvs(new int[]{31, 31, 31, 0, 31, 31});
+        this.setEvs(new int[]{52, 252, 0, 0, 0, 204});
 
-        this.level = 78;
-        this.gender = Gender.FEMALE;
-        this.nature = Nature.JOLLY;
-        this.ivs = new int[]{31, 31, 31, 0, 31, 31};
-        this.evs = new int[]{52, 252, 0, 0, 0, 204};
+        this.setMoves(new MoveList[]{MoveList.DRAGON_CLAW, MoveList.EARTHQUAKE,
+                                     MoveList.SWORDS_DANCE, MoveList.POISON_JAB});
 
-        this.moves = new MoveList[]{MoveList.DRAGON_CLAW, MoveList.EARTHQUAKE,
-                                    MoveList.SWORDS_DANCE, MoveList.POISON_JAB};
-
-        this.item = new SitrusBerry();
+        this.setItem(new SitrusBerry());
 
         initPokemon();
 
