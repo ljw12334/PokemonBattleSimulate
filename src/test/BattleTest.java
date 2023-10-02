@@ -3,6 +3,7 @@ package test;
 import main.Battle;
 import pokemon.MoveList;
 import pokemon.Pokemon;
+import trainer.Cynthia;
 import trainer.Player;
 import trainer.Wild;
 import pokemon.Pokemon.Stat;
@@ -19,30 +20,18 @@ public class BattleTest {
         Pokemon myPokemon = battle.getMyPokemon();
         Pokemon enemyPokemon = battle.getEnemyPokemon();
 
-        enemyPokemon.setCurrentHp(enemyPokemon.getStats()[Stat.HP.getID()]);
 
-
-        myPokemon.setPp(0, 0);
-        myPokemon.setPp(0, 1);
-        myPokemon.setPp(0, 2);
-        myPokemon.setPp(1, 3);
-
-        enemyPokemon.setPp(0, 0);
-        enemyPokemon.setPp(0, 1);
-        enemyPokemon.setPp(0, 2);
-        enemyPokemon.setPp(1, 3);
+//        myPokemon.setPp(0, 0);
+//        myPokemon.setPp(0, 1);
+//        myPokemon.setPp(0, 2);
+//        myPokemon.setPp(1, 3);
+//
+//        enemyPokemon.setPp(0, 0);
+//        enemyPokemon.setPp(0, 1);
+//        enemyPokemon.setPp(0, 2);
+//        enemyPokemon.setPp(1, 3);
 
         // 포켓몬 스탯 초기화
-        for (int i = 0; i < battle.getPlayer().getPokemons().length; i++) {
-            battle.getPlayer().getPokemons()[i].setCurrentHp(battle.getPlayer().getPokemons()[i].getStats()[Stat.HP.getID()]);
-            battle.getPlayer().getPokemons()[i].setBattleStats(
-                    battle.getPlayer().getPokemons()[i].getStats()[Stat.ATTACK.getID()],
-                    battle.getPlayer().getPokemons()[i].getStats()[Stat.DEFENSE.getID()],
-                    battle.getPlayer().getPokemons()[i].getStats()[Stat.SP_ATTACK.getID()],
-                    battle.getPlayer().getPokemons()[i].getStats()[Stat.SP_DEFENSE.getID()],
-                    battle.getPlayer().getPokemons()[i].getStats()[Stat.SPEED.getID()]
-            );
-        }
 
         System.out.println("앗! 야생 " + enemyPokemon.getName() + "이(가) 나타났다!");
         System.out.println("가랏! " + myPokemon.getName() + "!");
@@ -53,20 +42,7 @@ public class BattleTest {
         int select;
         while (true) {
             // 스탯에 랭크 업다운 반영
-            myPokemon.setBattleStats(
-                    battle.rankCaculate(battle.getMyRank()[0], myPokemon.getStats()[Stat.ATTACK.getID()]),
-                    battle.rankCaculate(battle.getMyRank()[1], myPokemon.getStats()[Stat.DEFENSE.getID()]),
-                    battle.rankCaculate(battle.getMyRank()[2], myPokemon.getStats()[Stat.SP_ATTACK.getID()]),
-                    battle.rankCaculate(battle.getMyRank()[3], myPokemon.getStats()[Stat.SP_DEFENSE.getID()]),
-                    battle.rankCaculate(battle.getMyRank()[4], myPokemon.getStats()[Stat.SPEED.getID()])
-            );
-            enemyPokemon.setBattleStats(
-                    battle.rankCaculate(battle.getEnemyRank()[0], enemyPokemon.getStats()[Stat.ATTACK.getID()]),
-                    battle.rankCaculate(battle.getEnemyRank()[1], enemyPokemon.getStats()[Stat.DEFENSE.getID()]),
-                    battle.rankCaculate(battle.getEnemyRank()[2], enemyPokemon.getStats()[Stat.SP_ATTACK.getID()]),
-                    battle.rankCaculate(battle.getEnemyRank()[3], enemyPokemon.getStats()[Stat.SP_DEFENSE.getID()]),
-                    battle.rankCaculate(battle.getEnemyRank()[4], enemyPokemon.getStats()[Stat.SPEED.getID()])
-            );
+            battle.turnCounter();
             System.out.print("\n");
 
             // 적 포켓몬 정보 출력

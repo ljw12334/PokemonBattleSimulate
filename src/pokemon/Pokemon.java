@@ -289,8 +289,9 @@ public class Pokemon {
                 caculateABCDS(Stat.SP_DEFENSE, this.level, this.baseStats, this.ivs, this.evs, this.nature),
                 caculateABCDS(Stat.SPEED, this.level, this.baseStats, this.ivs, this.evs, this.nature)
         };
+        // PP지정
         int[] pp;
-        // 기술 개수
+        // 기술 개수 체크
         if (this.getMoves().length >= 4) {
             pp = new int[]{ this.moves[0].getPp(), this.moves[1].getPp(),
                             this.moves[2].getPp(), this.moves[3].getPp() };
@@ -302,7 +303,7 @@ public class Pokemon {
         } else if (this.getMoves().length >= 1) {
             pp = new int[]{ this.moves[0].getPp() };
         } else {
-            System.out.println("기술 없음");
+            System.out.println(this.name + " : 기술 없음!");
             return;
         }
         this.pp = pp;

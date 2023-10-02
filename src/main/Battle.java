@@ -1,9 +1,6 @@
 package main;
 
-import pokemon.Ability;
-import pokemon.MoveList;
-import pokemon.Pokemon;
-import pokemon.Type;
+import pokemon.*;
 import trainer.Trainer;
 
 import pokemon.Pokemon.Stat;
@@ -12,10 +9,19 @@ public class Battle {
     private Trainer player, enemy;
     private Pokemon myPokemon, enemyPokemon;
 
+    private int currentTurn = 0;
+
     private byte[] myRank = new byte[]{0, 0, 0, 0, 0};
     private byte[] enemyRank = new byte[]{0, 0, 0, 0, 0};
 
+    public Battle(Trainer player, Trainer enemy) {
+        this.player = player;
+        this.enemy = enemy;
+        this.myPokemon = player.getPokemons()[0];
+        this.enemyPokemon = enemy.getPokemons()[0];
 
+        initBattle();
+    }
 
     public Trainer getPlayer() { return player; }
     public Trainer getEnemy() { return enemy; }
@@ -41,13 +47,6 @@ public class Battle {
 
     public void setEnemyRank(byte[] enemyRank) {
         this.enemyRank = enemyRank;
-    }
-
-    public Battle(Trainer player, Trainer enemy) {
-        this.player = player;
-        this.enemy = enemy;
-        this.myPokemon = player.getPokemons()[0];
-        this.enemyPokemon = enemy.getPokemons()[0];
     }
 
     public int rankCaculate(byte rank, int stat) {
@@ -92,12 +91,49 @@ public class Battle {
         return 1;
     }
     // 도구에 의한 데미지 증가
-    public float mod2() {
+    public float mod2(Pokemon attackPokemon) {
+        if (attackPokemon.getItem().getItemID() == ItemList.LIFE_ORB) return 1.3f;
         return 1;
     }
     // 특성, 도구, 열매에 의한 데미지 증감
-    public float mod3() {
-        return 1;
+    public float mod3(Pokemon attackPokemon, Pokemon targetPokemon, MoveList sMove, float typeCaculate) {
+        // (Mod3 = [[하드록]]·[[필터]] × [[달인의띠]] × [[색안경]] × 타입별위력반감[[열매]])
+        float result = 1;
+        float caTargetAbility = 1;
+        float caAttackItem = 1;
+        float caAttackAbility = 1;
+        float caBerry = 1;
+
+
+        Ability tAbility = targetPokemon.getAbility();
+        Ability aAbility = attackPokemon.getAbility();
+        ItemList tItem = targetPokemon.getItem().getItemID();
+        ItemList aItem = attackPokemon.getItem().getItemID();
+        Type sMoveType = sMove.getType();
+
+        // 하드록, 필터
+        if (tAbility == Ability.SOLID_ROCK || tAbility == Ability.FILTER && typeCaculate > 1) caTargetAbility = 0.75f;
+        // 달인의띠
+        if (aItem == ItemList.EXPERT_BELT && typeCaculate > 1) caAttackItem = 1.2f;
+        // 색안경
+        if (aAbility == Ability.TINTED_LENS && typeCaculate < 1) caAttackAbility = 2;
+        // 반감열매들
+        if (((tItem.getBERRY_ID() >= 36 && tItem.getBERRY_ID() <= 51) || tItem.getBERRY_ID() == 65) && typeCaculate > 1) {
+            if (tItem.getTYPE() == sMoveType.getNAME()) {
+                caBerry = 0.5f;
+                System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
+                targetPokemon.setItem(null);
+            }
+        }
+        if (tItem == ItemList.CHILAN_BERRY && sMoveType == Type.NORMAL) {
+            caBerry = 0.5f;
+            System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
+            targetPokemon.setItem(null);
+        }
+
+        result = caTargetAbility * caAttackItem * caAttackAbility * caBerry;
+
+        return result;
     }
     public float isSameType(Type attackType, Pokemon attackPokemon) {
         if (attackType == attackPokemon.getType1() || attackType == attackPokemon.getType2()) {
@@ -128,20 +164,21 @@ public class Battle {
     }
 
     public int damageCaculate(Pokemon attackPokemon, Pokemon targetPokemon, MoveList sMove, float isCritical) {
-        // (데미지 = (((((((레벨 × 2 ÷ 5) + 2) × 위력 × (특수)공격 ÷ 50) ÷ (특수)방어) × Mod1) + 2) × [[급소]] ×
-        //           Mod2 ×  랜덤수 ÷ 100) × 자속보정 × 타입상성1 × 타입상성2 × Mod3)
+        // (데미지 = (((((((레벨 × 2 ÷ 5) + 2) × 위력 × (특수)공격 ÷ 50) ÷ (특수)방어) × Mod1) + 2) × [[급소]] × Mod2 ×  랜덤수 ÷ 100)
+        //           × 자속보정 × 타입상성1 × 타입상성2 × Mod3)
         int damage;
 
         int level = attackPokemon.getLevel();
         int power = sMove.getPower();
         int attack;
         int defense;
+        // Same Type Attack Bonus, 자속보정
         float stab = isSameType(sMove.getType(), attackPokemon);
         float type1 = typeCaculate(sMove.getType(), targetPokemon.getType1());
         float type2 = typeCaculate(sMove.getType(), targetPokemon.getType2());
         float mod1 = mod1();
-        float mod2 = mod2();
-        float mod3 = mod3();
+        float mod2 = mod2(attackPokemon);
+        float mod3 = mod3(attackPokemon, targetPokemon, sMove, type1 * type2);
         float critical = isCritical;
         int randomInt = (int) ((Math.random() * 38 + 217) * 100) / 255;
 
@@ -163,5 +200,46 @@ public class Battle {
 
         if (type1 * type2 != 0 && damage <= 0) damage = 1;
         return damage;
+    }
+
+    public void turnCounter() {
+        this.myPokemon.setBattleStats(
+                this.rankCaculate(this.getMyRank()[0], myPokemon.getStats()[Stat.ATTACK.getID()]),
+                this.rankCaculate(this.getMyRank()[1], myPokemon.getStats()[Stat.DEFENSE.getID()]),
+                this.rankCaculate(this.getMyRank()[2], myPokemon.getStats()[Stat.SP_ATTACK.getID()]),
+                this.rankCaculate(this.getMyRank()[3], myPokemon.getStats()[Stat.SP_DEFENSE.getID()]),
+                this.rankCaculate(this.getMyRank()[4], myPokemon.getStats()[Stat.SPEED.getID()])
+        );
+        this.enemyPokemon.setBattleStats(
+                this.rankCaculate(this.getEnemyRank()[0], enemyPokemon.getStats()[Stat.ATTACK.getID()]),
+                this.rankCaculate(this.getEnemyRank()[1], enemyPokemon.getStats()[Stat.DEFENSE.getID()]),
+                this.rankCaculate(this.getEnemyRank()[2], enemyPokemon.getStats()[Stat.SP_ATTACK.getID()]),
+                this.rankCaculate(this.getEnemyRank()[3], enemyPokemon.getStats()[Stat.SP_DEFENSE.getID()]),
+                this.rankCaculate(this.getEnemyRank()[4], enemyPokemon.getStats()[Stat.SPEED.getID()])
+        );
+
+        this.currentTurn++;
+    }
+
+    public void initTrainerPokemons(Trainer trainer) {
+        for (int i = 0; i < trainer.getPokemons().length; i++) {
+            if (trainer.getPokemons()[i] == null) break;
+
+            trainer.getPokemons()[i].setCurrentHp(trainer.getPokemons()[i].getStats()[Stat.HP.getID()]);
+            trainer.getPokemons()[i].setBattleStats(
+                    trainer.getPokemons()[i].getStats()[Stat.ATTACK.getID()],
+                    trainer.getPokemons()[i].getStats()[Stat.DEFENSE.getID()],
+                    trainer.getPokemons()[i].getStats()[Stat.SP_ATTACK.getID()],
+                    trainer.getPokemons()[i].getStats()[Stat.SP_DEFENSE.getID()],
+                    trainer.getPokemons()[i].getStats()[Stat.SPEED.getID()]
+            );
+        }
+    }
+
+    public void initBattle() {
+        initTrainerPokemons(this.player);
+        initTrainerPokemons(this.enemy);
+
+        this.currentTurn = 1;
     }
 }
