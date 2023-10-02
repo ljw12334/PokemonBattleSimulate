@@ -7,6 +7,7 @@ import trainer.ai.NormalAi;
 public class Cynthia extends Trainer {
     public Cynthia() {
         this.setAi(new NormalAi(this));
+        this.setTrainerClass("챔피언");
         this.setTrainerName("난천");
 
         this.setPokemons(new Pokemon[]{

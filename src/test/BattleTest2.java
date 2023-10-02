@@ -1,5 +1,12 @@
 package test;
 
+import main.Battle;
+import trainer.Cynthia;
+import trainer.Player;
+import trainer.Wild;
+
+import java.util.Scanner;
+
 public class BattleTest2 {
     public static void main(String[] args) {
         // 1. 각 트레이너가 이번 턴의 행동을 고른다. (행동의 우선도 : 도망 > 교체 = 가방 > 배틀)
@@ -16,6 +23,11 @@ public class BattleTest2 {
         // 4. 각 행동과 세부 행동을 순서대로 처리한다.
         //
         // 5. 배틀 중 어느 한쪽이 쓰러졌고, 파티에 싸울 수 있는 포켓몬이 남은 경우, 해당 턴의 모든 처리를 완료한 후 교체한다. (턴 소모 X)
+
+        Scanner sc = new Scanner(System.in);
+
+        Battle b = new Battle(new Player(), new Wild());
+
 
 
     }

@@ -1,9 +1,11 @@
 package main;
 
 import pokemon.*;
+import trainer.Player;
 import trainer.Trainer;
 
 import pokemon.Pokemon.Stat;
+import trainer.ai.WildAi;
 
 public class Battle {
     private Trainer player, enemy;
@@ -22,6 +24,8 @@ public class Battle {
         this.enemyPokemon = enemy.getPokemons()[0];
 
         initBattle();
+
+        battleIntro();
     }
 
     // getter setter
@@ -134,13 +138,13 @@ public class Battle {
             if (((tItem.getBERRY_ID() >= 36 && tItem.getBERRY_ID() <= 51) || tItem.getBERRY_ID() == 65) && typeCaculate > 1) {
                 if (tItem.getTYPE() == sMoveType.getNAME()) {
                     caBerry = 0.5f;
-                    System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
+                    System.out.println(KorJongsung.isHave(tItem.getNAME(), "이 ", "가 ") + "기술의 위력을 약하게 했다!");
                     targetPokemon.setItem(null);
                 }
             }
             if (tItem == ItemList.CHILAN_BERRY && sMoveType == Type.NORMAL) {
                 caBerry = 0.5f;
-                System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
+                System.out.println(KorJongsung.isHave(tItem.getNAME(), "이 ", "가 ") + "기술의 위력을 약하게 했다!");
                 targetPokemon.setItem(null);
             }
         }
@@ -217,6 +221,10 @@ public class Battle {
     }
 
     public void turnCounter() {
+        reflectStats();
+        this.currentTurn++;
+    }
+    public void reflectStats() {
         this.myPokemon.setBattleStats(
                 this.rankCaculate(this.getMyRank()[0], myPokemon.getStats()[Stat.ATTACK.getID()]),
                 this.rankCaculate(this.getMyRank()[1], myPokemon.getStats()[Stat.DEFENSE.getID()]),
@@ -231,8 +239,6 @@ public class Battle {
                 this.rankCaculate(this.getEnemyRank()[3], enemyPokemon.getStats()[Stat.SP_DEFENSE.getID()]),
                 this.rankCaculate(this.getEnemyRank()[4], enemyPokemon.getStats()[Stat.SPEED.getID()])
         );
-
-        this.currentTurn++;
     }
 
     public void initTrainerPokemons(Trainer trainer) {
@@ -255,5 +261,22 @@ public class Battle {
         initTrainerPokemons(this.enemy);
 
         this.currentTurn = 1;
+    }
+
+    // 배틀 진행 ==================================================================================================
+    public void battleIntro() {
+        if (this.enemy.getAi().getAiName() == "wild") {
+            System.out.println("앗! 야생 " +
+                    KorJongsung.isHave(this.enemyPokemon.getName(), "이 ", "가 ")  + "나타났다!");
+
+        } else {
+            System.out.println(this.enemy.getTrainerClass() + " " +
+                    KorJongsung.isHave(this.enemy.getTrainerName(), "이 ", "가 ") + "승부를 걸어왔다!");
+
+            System.out.println(this.enemy.getTrainerClass() + " " +
+                    KorJongsung.isHave(this.enemy.getTrainerName(), "은 ", "는 ") +
+                    KorJongsung.isHave(this.enemyPokemon.getName(), "을 ", "를 ") + "내보냈다!");
+        }
+        System.out.println("가랏! " + this.myPokemon.getName() + "!");
     }
 }
