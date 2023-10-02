@@ -36,7 +36,6 @@ public class BattleTest {
         System.out.println("앗! 야생 " + enemyPokemon.getName() + "이(가) 나타났다!");
         System.out.println("가랏! " + myPokemon.getName() + "!");
 
-        int runTryCount = 0;
         int myHpBar, enemyHpBar;
 
         int select;
@@ -283,20 +282,20 @@ public class BattleTest {
             // 도망친다
             else {
                 // 도망 확률 계산
-                int runRate, speedCalc;
+                int runRate, mySpeed, enemySpeed;
 
-                // 내 포켓몬 스피드 / 야생 포켓몬 스피드 (소수점 버림)
-                if (enemyPokemon.getStats()[Stat.SPEED.getID()] == 0) {
+                mySpeed = myPokemon.getBattleStats()[Stat.SPEED.getID()];
+                if (enemyPokemon.getBattleStats()[Stat.SPEED.getID()] == 0) {
                     // 적 스피드가 0일 시 계산값 1로 고정
-                    speedCalc = 1;
+                    enemySpeed = 1;
                 } else {
-                    speedCalc = myPokemon.getStats()[Stat.SPEED.getID()] / enemyPokemon.getStats()[Stat.SPEED.getID()];
+                    enemySpeed = enemyPokemon.getBattleStats()[Stat.SPEED.getID()];
                 }
 
-                runRate = 128 * speedCalc + 30 * runTryCount;
+                runRate = 128 * mySpeed / enemySpeed + 30 * battle.getRunTryCount();
 
                 int temp = (int) (Math.random() * 256);
-                System.out.print(runRate + " > " + temp + " ? ");
+                System.out.print(runRate % 256 + " > " + temp + " ? ");
 
                 if (runRate % 256 > temp) {
                     System.out.println("true!");
@@ -305,7 +304,7 @@ public class BattleTest {
                 } else {
                     System.out.println("false!");
                     System.out.println("도망칠 수 없었다!");
-                    runTryCount++;
+                    battle.setRunTryCount(battle.getRunTryCount() + 1);
                 }
             }
 

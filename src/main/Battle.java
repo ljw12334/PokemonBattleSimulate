@@ -10,6 +10,7 @@ public class Battle {
     private Pokemon myPokemon, enemyPokemon;
 
     private int currentTurn = 0;
+    private int runTryCount = 0;
 
     private byte[] myRank = new byte[]{0, 0, 0, 0, 0};
     private byte[] enemyRank = new byte[]{0, 0, 0, 0, 0};
@@ -23,11 +24,16 @@ public class Battle {
         initBattle();
     }
 
+    // getter setter
+    public int getRunTryCount() { return runTryCount; }
+    public void setRunTryCount(int runTryCount) { this.runTryCount = runTryCount; }
+
     public Trainer getPlayer() { return player; }
     public Trainer getEnemy() { return enemy; }
 
     public Pokemon getMyPokemon() { return myPokemon; }
     public void setMyPokemon(Pokemon myPokemon) { this.myPokemon = myPokemon; }
+
     public Pokemon getEnemyPokemon() { return enemyPokemon; }
     public void setEnemyPokemon(Pokemon enemyPokemon) { this.enemyPokemon = enemyPokemon; }
 
@@ -48,6 +54,8 @@ public class Battle {
     public void setEnemyRank(byte[] enemyRank) {
         this.enemyRank = enemyRank;
     }
+
+    // methods
 
     public int rankCaculate(byte rank, int stat) {
         float caculatedStat;
@@ -92,6 +100,7 @@ public class Battle {
     }
     // 도구에 의한 데미지 증가
     public float mod2(Pokemon attackPokemon) {
+        if (attackPokemon.getItem() == null) return 1;
         if (attackPokemon.getItem().getItemID() == ItemList.LIFE_ORB) return 1.3f;
         return 1;
     }
@@ -103,12 +112,15 @@ public class Battle {
         float caAttackItem = 1;
         float caAttackAbility = 1;
         float caBerry = 1;
-
+        ItemList tItem = null;
+        ItemList aItem = null;
 
         Ability tAbility = targetPokemon.getAbility();
         Ability aAbility = attackPokemon.getAbility();
-        ItemList tItem = targetPokemon.getItem().getItemID();
-        ItemList aItem = attackPokemon.getItem().getItemID();
+        if (targetPokemon.getItem() != null)
+            tItem = targetPokemon.getItem().getItemID();
+        if (attackPokemon.getItem() != null)
+            aItem = attackPokemon.getItem().getItemID();
         Type sMoveType = sMove.getType();
 
         // 하드록, 필터
@@ -118,17 +130,19 @@ public class Battle {
         // 색안경
         if (aAbility == Ability.TINTED_LENS && typeCaculate < 1) caAttackAbility = 2;
         // 반감열매들
-        if (((tItem.getBERRY_ID() >= 36 && tItem.getBERRY_ID() <= 51) || tItem.getBERRY_ID() == 65) && typeCaculate > 1) {
-            if (tItem.getTYPE() == sMoveType.getNAME()) {
+        if (tItem != null) {
+            if (((tItem.getBERRY_ID() >= 36 && tItem.getBERRY_ID() <= 51) || tItem.getBERRY_ID() == 65) && typeCaculate > 1) {
+                if (tItem.getTYPE() == sMoveType.getNAME()) {
+                    caBerry = 0.5f;
+                    System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
+                    targetPokemon.setItem(null);
+                }
+            }
+            if (tItem == ItemList.CHILAN_BERRY && sMoveType == Type.NORMAL) {
                 caBerry = 0.5f;
                 System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
                 targetPokemon.setItem(null);
             }
-        }
-        if (tItem == ItemList.CHILAN_BERRY && sMoveType == Type.NORMAL) {
-            caBerry = 0.5f;
-            System.out.println(tItem.getNAME() + "가 기술의 위력을 약하게 했다!");
-            targetPokemon.setItem(null);
         }
 
         result = caTargetAbility * caAttackItem * caAttackAbility * caBerry;

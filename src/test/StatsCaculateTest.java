@@ -37,7 +37,7 @@ public class StatsCaculateTest {
             if (i.getItem() == null) {
                 System.out.println("지닌물건 : 없음");
             } else {
-                System.out.println("지닌물건 : " + i.getItem().name);
+                System.out.println("지닌물건 : " + i.getItem().getName());
             }
 
             System.out.print("기술배치 : ");
