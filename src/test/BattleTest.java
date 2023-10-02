@@ -1,6 +1,7 @@
 package test;
 
 import main.Battle;
+import main.ConsoleTextColor;
 import pokemon.MoveList;
 import pokemon.Pokemon;
 import trainer.Cynthia;
@@ -33,10 +34,8 @@ public class BattleTest {
 
         // 포켓몬 스탯 초기화
 
-        System.out.println("앗! 야생 " + enemyPokemon.getName() + "이(가) 나타났다!");
-        System.out.println("가랏! " + myPokemon.getName() + "!");
-
         int myHpBar, enemyHpBar;
+        int hpBarLength = 30;
 
         int select;
         while (true) {
@@ -45,33 +44,44 @@ public class BattleTest {
             System.out.print("\n");
 
             // 적 포켓몬 정보 출력
-            System.out.print("　　　　　　　　　　　　　　　");
             System.out.println(enemyPokemon.getName() + " " + enemyPokemon.getGender().getSYMBOL() + " Lv." + enemyPokemon.getLevel());
-            System.out.print("　　　　　　　　　　　　　　　");
-            System.out.print("[HP][");
 
-            enemyHpBar = (int) ((float) enemyPokemon.getBattleStats()[Stat.HP.getID()] / (float) enemyPokemon.getStats()[Stat.HP.getID()] * 20);
+            enemyHpBar = (int) ((float) enemyPokemon.getBattleStats()[Stat.HP.getID()] / (float) enemyPokemon.getStats()[Stat.HP.getID()] * hpBarLength);
+
+            // 체력바 색상 변경 | 절반 이상 : 녹색 | 절반 미만 : 노랑 | 1/4 미만 : 빨강
+            if (enemyHpBar >= (hpBarLength / 2))
+                System.out.print("[HP][" + ConsoleTextColor.FONT_GREEN);
+            else if (enemyHpBar >= (hpBarLength / 4))
+                System.out.print("[HP][" + ConsoleTextColor.FONT_YELLOW);
+            else
+                System.out.print("[HP][" + ConsoleTextColor.FONT_RED);
+
             if (enemyHpBar == 0 && enemyPokemon.getBattleStats()[Stat.HP.getID()] > 0) enemyHpBar = 1;
 
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < hpBarLength; i++) {
                 if (i + 1 <= enemyHpBar) System.out.print("=");
                 else System.out.print(" ");
             }
-            System.out.println("]");
-            System.out.print("　　　　　　　　　　　　　　　");
-            System.out.println(enemyPokemon.getBattleStats()[Stat.HP.getID()] +  " / " + enemyPokemon.getStats()[Stat.HP.getID()]);
+//            System.out.println("] " + enemyPokemon.getBattleStats()[Stat.HP.getID()] +  " / " + enemyPokemon.getStats()[Stat.HP.getID()] + "\n");
+            System.out.println(ConsoleTextColor.RESET + "]\n");
 
             // 내 포켓몬 정보 출력
             System.out.println(myPokemon.getName() + " " + myPokemon.getGender().getSYMBOL() + " Lv." + myPokemon.getLevel());
-            System.out.print("[HP][");
 
-            myHpBar = (int) ((float) myPokemon.getBattleStats()[Stat.HP.getID()] / (float) myPokemon.getStats()[Stat.HP.getID()] * 20);
-            for (int i = 0; i < 20; i++) {
+            myHpBar = (int) ((float) myPokemon.getBattleStats()[Stat.HP.getID()] / (float) myPokemon.getStats()[Stat.HP.getID()] * hpBarLength);
+            if (myHpBar >= (hpBarLength / 2))
+                System.out.print("[HP][" + ConsoleTextColor.FONT_GREEN);
+            else if (myHpBar >= (hpBarLength / 4))
+                System.out.print("[HP][" + ConsoleTextColor.FONT_YELLOW);
+            else
+                System.out.print("[HP][" + ConsoleTextColor.FONT_RED);
+
+            for (int i = 0; i < hpBarLength; i++) {
                 if (i + 1 <= myHpBar) System.out.print("=");
                 else System.out.print(" ");
             }
-            System.out.println("]");
-            System.out.println(myPokemon.getBattleStats()[Stat.HP.getID()] +  " / " + myPokemon.getStats()[Stat.HP.getID()] + "\n");
+            System.out.println(ConsoleTextColor.RESET + "] " +
+                    myPokemon.getBattleStats()[Stat.HP.getID()] +  " / " + myPokemon.getStats()[Stat.HP.getID()] + "\n");
 
             // 시작
             System.out.print(myPokemon.getName() + "은(는) 무엇을 할까?" + "\n1)싸운다    2)포켓몬    3)가방    4)도망간다 : ");
@@ -171,7 +181,7 @@ public class BattleTest {
                             System.out.println("효과가 별로인 것 같다...");
                         }
                         if (critical > 1 && type1 * type2 != 0 && sMove.getKind() != MoveList.Kind.STATUS) {
-                            System.out.println("급소에 맞았다!");
+                            System.out.println(ConsoleTextColor.FONT_RED + "급소에 맞았다!" + ConsoleTextColor.RESET);
                         }
 
                         int newHp = enemyPokemon.getBattleStats()[Stat.HP.getID()] - damage;
@@ -347,7 +357,7 @@ public class BattleTest {
                         System.out.println("효과가 별로인 것 같다...");
                     }
                     if (critical > 1 && type1 * type2 != 0 && sMove.getKind() != MoveList.Kind.STATUS) {
-                        System.out.println("급소에 맞았다!");
+                        System.out.println(ConsoleTextColor.FONT_RED + "급소에 맞았다!" + ConsoleTextColor.RESET);
                     }
 
                     int newHp = myPokemon.getBattleStats()[Stat.HP.getID()] - damage;
