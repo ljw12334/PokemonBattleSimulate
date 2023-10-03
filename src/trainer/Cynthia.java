@@ -9,6 +9,7 @@ public class Cynthia extends Trainer {
         this.setAi(new NormalAi(this));
         this.setTrainerClass("챔피언");
         this.setTrainerName("난천");
+        this.setPrizeMoney(26928);
 
         this.setPokemons(new Pokemon[]{
                 new CynthiaSpiritomb(), new CynthiaRoserade(), new CynthiaTogekiss(),

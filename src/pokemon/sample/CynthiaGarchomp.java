@@ -17,7 +17,7 @@ public class CynthiaGarchomp extends Pokemon {
         this.setMoves(new MoveList[]{MoveList.DRAGON_CLAW, MoveList.EARTHQUAKE,
                                      MoveList.SWORDS_DANCE, MoveList.POISON_JAB});
 
-        this.setItem(new SitrusBerry());
+        this.setItem(new SitrusBerry(this));
 
         initPokemon();
 

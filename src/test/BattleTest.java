@@ -2,8 +2,10 @@ package test;
 
 import main.Battle;
 import main.ConsoleTextColor;
+import main.KorJongsung;
 import pokemon.MoveList;
 import pokemon.Pokemon;
+import pokemon.Status;
 import trainer.Cynthia;
 import trainer.Player;
 import trainer.Wild;
@@ -36,6 +38,7 @@ public class BattleTest {
 
         int myHpBar, enemyHpBar;
         int hpBarLength = 30;
+        boolean isAllFainted = false;
 
         int select;
         while (true) {
@@ -84,7 +87,9 @@ public class BattleTest {
                     myPokemon.getBattleStats()[Stat.HP.getID()] +  " / " + myPokemon.getStats()[Stat.HP.getID()] + "\n");
 
             // 시작
-            System.out.print(myPokemon.getName() + "은(는) 무엇을 할까?" + "\n1)싸운다    2)포켓몬    3)가방    4)도망간다 : ");
+            System.out.print(
+                    KorJongsung.isHave(myPokemon.getName(), "은 ", "는 ") + "무엇을 할까?" +
+                    "\n1)싸운다    2)포켓몬    3)가방    4)도망간다\n: ");
             select = sc.nextInt();
 
 
@@ -103,7 +108,7 @@ public class BattleTest {
                                 System.out.print((i + 1) + ")" + myPokemon.getMoves()[i].getName() +
                                         " [pp " + myPokemon.getPp()[i] + " / " + myPokemon.getMoves()[i].getPp() + "]    ");
                             }
-                            System.out.print((myPokemon.getMoves().length + 1) + ")돌아간다 : ");
+                            System.out.print((myPokemon.getMoves().length + 1) + ")돌아간다\n: ");
                             select = sc.nextInt();
 
                             // 기술 선택
@@ -173,6 +178,9 @@ public class BattleTest {
                             break;
                         }
                         System.out.println(myPokemon.getName() + "의 " + sMove.getName() + "!");
+
+                        System.out.println("상성 : " + type1 * type2 + "배");
+
                         if (type1 * type2 == 0) {
                             System.out.println("효과가 없는 것 같다...");
                         } else if (type1 * type2 > 1 && sMove.getKind() != MoveList.Kind.STATUS) {
@@ -203,11 +211,25 @@ public class BattleTest {
             // 포켓몬
             else if (select == 2) {
                 while (true) {
-                    System.out.println();
+                    System.out.println("\n교대할 포켓몬을 선택해 주세요");
                     for (int i = 0; i < battle.getPlayer().getPokemons().length; i++) {
-                        System.out.print((i + 1) + ")" + battle.getPlayer().getPokemons()[i].getName() + "    ");
+                        if (battle.getPlayer().getPokemons()[i].getStatus() == Status.FAINT) {
+                            System.out.print((i + 1) + ")" +
+                                    ConsoleTextColor.FONT_RED +
+                                    battle.getPlayer().getPokemons()[i].getName() +
+                                    ConsoleTextColor.RESET +
+                                    "    ");
+                        } else if (battle.getPlayer().getPokemons()[i] == myPokemon) {
+                            System.out.print((i + 1) + ")" +
+                                    ConsoleTextColor.FONT_GREEN +
+                                    battle.getPlayer().getPokemons()[i].getName() +
+                                    ConsoleTextColor.RESET +
+                                    "    ");
+                        } else {
+                            System.out.print((i + 1) + ")" + battle.getPlayer().getPokemons()[i].getName() + "    ");
+                        }
                     }
-                    System.out.print((battle.getPlayer().getPokemons().length + 1) + ")돌아간다 : ");
+                    System.out.print((battle.getPlayer().getPokemons().length + 1) + ")돌아간다\n: ");
                     select = sc.nextInt();
 
                     // 포켓몬 선택
@@ -216,7 +238,9 @@ public class BattleTest {
                     if (select == 1) {
                         // 교대 포켓몬 체크
                         changePokemon = battle.getPlayer().getPokemons()[0];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -226,7 +250,9 @@ public class BattleTest {
                         if (battle.getPlayer().getPokemons().length < 2) break;
 
                         changePokemon = battle.getPlayer().getPokemons()[1];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -235,7 +261,9 @@ public class BattleTest {
                         if (battle.getPlayer().getPokemons().length < 3) break;
 
                         changePokemon = battle.getPlayer().getPokemons()[2];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -244,7 +272,9 @@ public class BattleTest {
                         if (battle.getPlayer().getPokemons().length < 4) break;
 
                         changePokemon = battle.getPlayer().getPokemons()[3];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -253,7 +283,9 @@ public class BattleTest {
                         if (battle.getPlayer().getPokemons().length < 5) break;
 
                         changePokemon = battle.getPlayer().getPokemons()[4];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -262,7 +294,9 @@ public class BattleTest {
                         if (battle.getPlayer().getPokemons().length < 6) break;
 
                         changePokemon = battle.getPlayer().getPokemons()[5];
-                        if (changePokemon == myPokemon) {
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
                             System.out.println("이미 배틀에 나가 있습니다!");
                         } else {
                             isChanged = true;
@@ -318,6 +352,14 @@ public class BattleTest {
                 }
             }
 
+            if (enemyPokemon.getBattleStats()[Stat.HP.getID()] <= 0) {
+                enemyPokemon.setStatus(Status.FAINT);
+
+                System.out.println("야생 " +
+                        KorJongsung.isHave(enemyPokemon.getName(), "은 ", "는 ") + "쓰러졌다!");
+                break;
+            }
+
             // 상대의 턴
             BattleAi.Behavior nextBehavior =  battle.getEnemy().getAi().whatToDo();
             MoveList sMove = MoveList.STRUGGLE;
@@ -339,9 +381,9 @@ public class BattleTest {
 
                 if (sMove.getAccurary() >= accuraryRate || sMove.getAccurary() == -1) {
                     if (sMove.getKind() == MoveList.Kind.PHYSICAL) {
-                        damage = battle.damageCaculate(myPokemon, enemyPokemon, sMove, critical);
+                        damage = battle.damageCaculate(enemyPokemon, myPokemon, sMove, critical);
                     } else if (sMove.getKind() == MoveList.Kind.SPECIAL) {
-                        damage = battle.damageCaculate(myPokemon, enemyPokemon, sMove, critical);
+                        damage = battle.damageCaculate(enemyPokemon, myPokemon, sMove, critical);
                     } else if (sMove.getKind() == MoveList.Kind.STATUS) {
 
                     } else {
@@ -349,6 +391,9 @@ public class BattleTest {
 
                     }
                     System.out.println("야생 " + enemyPokemon.getName() + "의 " + sMove.getName() + "!");
+
+                    System.out.println("상성 : " + type1 * type2 + "배");
+
                     if (type1 * type2 == 0) {
                         System.out.println("효과가 없는 것 같다...");
                     } else if (type1 * type2 > 1 && sMove.getKind() != MoveList.Kind.STATUS) {
@@ -377,6 +422,134 @@ public class BattleTest {
 
             } else {
 
+            }
+
+            if (myPokemon.getBattleStats()[Stat.HP.getID()] <= 0) {
+                myPokemon.setStatus(Status.FAINT);
+
+                System.out.println(
+                        KorJongsung.isHave(myPokemon.getName(), "은 ", "는 ") + "쓰러졌다!");
+
+                while (true) {
+                    isAllFainted = true;
+                    for (Pokemon p : battle.getPlayer().getPokemons()) {
+                        if (p.getStatus() != Status.FAINT) isAllFainted = false;
+                    }
+                    if (isAllFainted) {
+                        System.out.println(battle.getPlayer().getTrainerName() + "에게는 더이상 싸울 수 있는 포켓몬이 없다!");
+                        System.out.println("......");
+                        System.out.println(
+                                KorJongsung.isHave(battle.getPlayer().getTrainerName(), "은 ", "는 ") +
+                                "눈앞이 깜깜해졌다!");
+
+                        break;
+                    }
+
+                    System.out.println("\n교대할 포켓몬을 선택해 주세요");
+                    for (int i = 0; i < battle.getPlayer().getPokemons().length; i++) {
+                        if (battle.getPlayer().getPokemons()[i].getStatus() == Status.FAINT) {
+                            System.out.print((i + 1) + ")" +
+                                    ConsoleTextColor.FONT_RED +
+                                    battle.getPlayer().getPokemons()[i].getName() +
+                                    ConsoleTextColor.RESET +
+                                    "    ");
+                        } else if (battle.getPlayer().getPokemons()[i] == myPokemon) {
+                            System.out.print((i + 1) + ")" +
+                                    ConsoleTextColor.FONT_GREEN +
+                                    battle.getPlayer().getPokemons()[i].getName() +
+                                    ConsoleTextColor.RESET +
+                                    "    ");
+                        } else {
+                            System.out.print((i + 1) + ")" + battle.getPlayer().getPokemons()[i].getName() + "    ");
+                        }
+                    }
+                    System.out.print((battle.getPlayer().getPokemons().length + 1) + ")돌아간다\n: ");
+                    select = sc.nextInt();
+
+                    // 포켓몬 선택
+                    Pokemon changePokemon = null;
+                    boolean isChanged = false;
+                    if (select == 1) {
+                        // 교대 포켓몬 체크
+                        changePokemon = battle.getPlayer().getPokemons()[0];
+
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else if (select == 2) {
+                        // 길이 체크
+                        if (battle.getPlayer().getPokemons().length < 2) System.out.println("잘못된 값입니다!");
+
+                        changePokemon = battle.getPlayer().getPokemons()[1];
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else if (select == 3) {
+                        if (battle.getPlayer().getPokemons().length < 3) System.out.println("잘못된 값입니다!");
+
+                        changePokemon = battle.getPlayer().getPokemons()[2];
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else if (select == 4) {
+                        if (battle.getPlayer().getPokemons().length < 4) System.out.println("잘못된 값입니다!");
+
+                        changePokemon = battle.getPlayer().getPokemons()[3];
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else if (select == 5) {
+                        if (battle.getPlayer().getPokemons().length < 5) System.out.println("잘못된 값입니다!");
+
+                        changePokemon = battle.getPlayer().getPokemons()[4];
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else if (select == 6) {
+                        if (battle.getPlayer().getPokemons().length < 6) System.out.println("잘못된 값입니다!");
+
+                        changePokemon = battle.getPlayer().getPokemons()[5];
+                        if (changePokemon.getStatus() == Status.FAINT) {
+                            System.out.println("기절한 포켓몬은 내보낼 수 없습니다!");
+                        } else if (changePokemon == myPokemon) {
+                            System.out.println("이미 배틀에 나가 있습니다!");
+                        } else {
+                            isChanged = true;
+                        }
+                    } else {
+                        System.out.println("잘못된 값입니다!");
+                    }
+
+                    if (isChanged) {
+                        battle.setMyPokemon(changePokemon);
+                        myPokemon = battle.getMyPokemon();
+                        battle.resetMyRank();
+
+                        System.out.println("가랏! " + myPokemon.getName() + "!");
+                        break;
+                    }
+                }
+                if (isAllFainted) break;
             }
         }
     }

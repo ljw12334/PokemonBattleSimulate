@@ -7,6 +7,8 @@ public class Item {
     private String kind;
     private String explain;
 
+    private Pokemon havingPokemon;
+
     public ItemList getItemID() {
         return itemID;
     }
@@ -19,11 +21,21 @@ public class Item {
     public String getExplain() {
         return explain;
     }
+    public Pokemon getHavingPokemon() {
+        return havingPokemon;
+    }
+    public void setHavingPokemon(Pokemon havingPokemon) {
+        this.havingPokemon = havingPokemon;
+    }
 
-    public void initItem(ItemList itemID) {
+    public void initItem(ItemList itemID, Pokemon havingPokemon) {
         this.itemID = itemID;
         this.name = this.itemID.getNAME();
         this.kind = this.itemID.getKIND();
         this.explain = this.itemID.getEXPLAIN();
+        this.havingPokemon = havingPokemon;
+    }
+    public void effect() {
+
     }
 }

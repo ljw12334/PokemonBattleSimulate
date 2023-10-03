@@ -1,5 +1,7 @@
 package pokemon;
 
+import main.ConsoleTextColor;
+
 public class Pokemon {
     public enum Gender {
         MALE("♂"), FEMALE("♀"), NONE(" ");
@@ -67,47 +69,36 @@ public class Pokemon {
     public int[] getPp() {
         return pp;
     }
-
     public void setPp(int pp, int moveNum) {
         this.pp[moveNum] = pp;
     }
-
     public PokemonList getPokemonKind() {
         return pokemonKind;
     }
-
     public void setPokemonKind(PokemonList pokemonKind) {
         this.pokemonKind = pokemonKind;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public Type getType1() {
         return type1;
     }
-
     public void setType1(Type type1) {
         this.type1 = type1;
     }
-
     public Type getType2() {
         return type2;
     }
-
     public void setType2(Type type2) {
         this.type2 = type2;
     }
-
     public int[] getBaseStats() {
         return baseStats;
     }
-
     public void setBaseStats(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
         this.baseStats[Stat.HP.getID()] = hp;
         this.baseStats[Stat.ATTACK.getID()] = attack;
@@ -116,43 +107,33 @@ public class Pokemon {
         this.baseStats[Stat.SP_DEFENSE.getID()] = spDefense;
         this.baseStats[Stat.SPEED.getID()] = speed;
     }
-
     public Ability getAbility() {
         return ability;
     }
-
     public void setAbility(Ability ability) {
         this.ability = ability;
     }
-
     public int getLevel() {
         return level;
     }
-
     public void setLevel(int level) {
         this.level = level;
     }
-
     public Gender getGender() {
         return gender;
     }
-
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
     public Nature getNature() {
         return nature;
     }
-
     public void setNature(Nature nature) {
         this.nature = nature;
     }
-
     public int[] getIvs() {
         return ivs;
     }
-
     public void setIvs(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
         this.ivs[Stat.HP.getID()] = hp;
         this.ivs[Stat.ATTACK.getID()] = attack;
@@ -161,11 +142,9 @@ public class Pokemon {
         this.ivs[Stat.SP_DEFENSE.getID()] = spDefense;
         this.ivs[Stat.SPEED.getID()] = speed;
     }
-
     public int[] getEvs() {
         return evs;
     }
-
     public void setEvs(int hp, int attack, int defense, int spAttack, int spDefense, int speed) {
         this.evs[Stat.ATTACK.getID()] = attack;
         this.evs[Stat.HP.getID()] = hp;
@@ -174,19 +153,15 @@ public class Pokemon {
         this.evs[Stat.SP_DEFENSE.getID()] = spDefense;
         this.evs[Stat.SPEED.getID()] = speed;
     }
-
     public int[] getStats() {
         return stats;
     }
-
     public void setStats(int[] stats) {
         this.stats = stats;
     }
-
     public int[] getBattleStats() {
         return battleStats;
     }
-
     public void setCurrentHp(int hp) {
         this.battleStats[Stat.HP.getID()] = hp;
     }
@@ -200,49 +175,38 @@ public class Pokemon {
     public MoveList[] getMoves() {
         return moves;
     }
-
     public void setMoves(MoveList[] moves) {
         for (int i = 0; i < 4; i ++) {
             this.moves[i] = moves[i];
         }
     }
-
     public Item getItem() {
         return item;
     }
-
     public void setItem(Item item) {
         this.item = item;
     }
-
     public Status getStatus() {
         return status;
     }
-
     public void setStatus(Status status) {
         this.status = status;
     }
-
     public boolean isConfused() {
         return isConfused;
     }
-
     public void setConfused(boolean confused) {
         isConfused = confused;
     }
-
     public int getConfuseTurnCount() {
         return confuseTurnCount;
     }
-
     public void setConfuseTurnCount(int confuseTurnCount) {
         this.confuseTurnCount = confuseTurnCount;
     }
-
     public boolean isStuned() {
         return isStuned;
     }
-
     public void setStuned(boolean stuned) {
         isStuned = stuned;
     }
@@ -303,7 +267,7 @@ public class Pokemon {
         } else if (this.getMoves().length >= 1) {
             pp = new int[]{ this.moves[0].getPp() };
         } else {
-            System.out.println(this.name + " : 기술 없음!");
+            System.out.println(ConsoleTextColor.FONT_RED + this.name + " : 기술 없음!" + ConsoleTextColor.RESET);
             return;
         }
         this.pp = pp;

@@ -13,6 +13,19 @@ public class Trainer {
     private int penaltyMoney;
 
 
+    public int getPrizeMoney() {
+        return prizeMoney;
+    }
+    public void setPrizeMoney(int prizeMoney) {
+        this.prizeMoney = prizeMoney;
+    }
+    public int getPenaltyMoney() {
+        return penaltyMoney;
+    }
+    public void setPenaltyMoney(int penaltyMoney) {
+        this.penaltyMoney = penaltyMoney;
+    }
+
     public BattleAi getAi() {
         return ai;
     }

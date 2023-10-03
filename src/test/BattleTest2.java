@@ -1,9 +1,13 @@
 package test;
 
 import main.Battle;
+import main.ConsoleTextColor;
+import pokemon.MoveList;
+import pokemon.Pokemon;
 import trainer.Cynthia;
 import trainer.Player;
 import trainer.Wild;
+import trainer.ai.BattleAi;
 
 import java.util.Scanner;
 
@@ -28,7 +32,118 @@ public class BattleTest2 {
 
         Battle b = new Battle(new Player(), new Wild());
 
+        int select;
+        int myMoveIndex = -1;
+        int enemyMoveIndex = -1;
+        while (true) {
+            b.drawHpBar();
+            select = sc.nextInt();
 
+            if (select == 1) {
+                myMoveIndex = b.selectMove(sc);
 
+                // 돌아간다를 고른 경우
+                if (myMoveIndex == 5) continue;
+
+                b.setMyNextBehavior(BattleAi.Behavior.BATTLE);
+
+            } else if (select == 2) {
+                b.setMyNextBehavior(BattleAi.Behavior.POKEMON);
+
+            } else if (select == 3) {
+                b.setMyNextBehavior(BattleAi.Behavior.BAG);
+
+            } else {
+                b.setMyNextBehavior(BattleAi.Behavior.RUN);
+
+            }
+
+            b.setEnemyNextBehavior(b.getEnemy().getAi().whatToDo());
+            if (b.getEnemyNextBehavior() == BattleAi.Behavior.BATTLE) {
+                enemyMoveIndex = b.getEnemy().getAi().selectMove(b.getEnemyPokemon());
+            }
+
+            // 선턴
+            if (b.isFasterThanEnemy(myMoveIndex, enemyMoveIndex)) {
+
+                // 내 행동
+                if (b.getMyNextBehavior() == BattleAi.Behavior.BATTLE) { // 내가 배틀을 골라서 선턴을 가지는 경우는 상대도 배틀을 골랐을때뿐임
+                    b.attack(b.getMyPokemon(), b.getEnemyPokemon(), myMoveIndex);
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.POKEMON) {
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.BAG) {
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.RUN) {
+                    if (b.isRun()) {
+                        System.out.println("무사히 도망쳤다!");
+                        break;
+                    } else {
+                        System.out.println("도망칠 수 없었다!");
+                    }
+                } else {
+                    System.out.println(ConsoleTextColor.FONT_RED + "myNextBehavior: 잘못된 행동 값!" + ConsoleTextColor.RESET);
+                    break;
+                }
+
+                // 상대 행동
+                if (b.getEnemyNextBehavior() == BattleAi.Behavior.BATTLE) {
+                    b.attack(b.getEnemyPokemon(), b.getMyPokemon(), enemyMoveIndex);
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.POKEMON) {
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.BAG) {
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.RUN) {
+
+                } else {
+                    System.out.println(ConsoleTextColor.FONT_RED + "enemyNextBehavior: 잘못된 행동 값!" + ConsoleTextColor.RESET);
+                    break;
+                }
+            }
+
+            // 후턴
+            else {
+                // 상대 행동
+                if (b.getEnemyNextBehavior() == BattleAi.Behavior.BATTLE) {
+                    b.attack(b.getEnemyPokemon(), b.getMyPokemon(), enemyMoveIndex);
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.POKEMON) {
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.BAG) {
+
+                } else if (b.getEnemyNextBehavior() == BattleAi.Behavior.RUN) {
+
+                } else {
+                    System.out.println(ConsoleTextColor.FONT_RED + "enemyNextBehavior: 잘못된 행동 값!" + ConsoleTextColor.RESET);
+                    break;
+                }
+
+                // 내 행동
+                if (b.getMyNextBehavior() == BattleAi.Behavior.BATTLE) {
+                    b.attack(b.getMyPokemon(), b.getEnemyPokemon(), myMoveIndex);
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.POKEMON) {
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.BAG) {
+
+                } else if (b.getMyNextBehavior() == BattleAi.Behavior.RUN) {
+
+                    // 도망을 골랐는데 후턴을 가질 순 없음
+                    System.out.println(ConsoleTextColor.FONT_RED + "경고: 올바르지 않은 상황" + ConsoleTextColor.RESET);
+
+                    if (b.isRun()) {
+                        System.out.println("무사히 도망쳤다!");
+                        break;
+                    } else {
+                        System.out.println("도망칠 수 없었다!");
+                    }
+                } else {
+                    System.out.println(ConsoleTextColor.FONT_RED + "myNextBehavior: 잘못된 행동 값!" + ConsoleTextColor.RESET);
+                    break;
+                }
+            }
+
+        }
     }
 }
